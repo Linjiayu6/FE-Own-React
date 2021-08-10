@@ -1,0 +1,56 @@
+<html>
+
+<head>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="./4_fiber_commit.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        function createText (text) {
+            return {
+                type: 'TEXT_VDOM',
+                props: {
+                    nodeValue: text,
+                    children: []
+                }
+            }
+        }
+
+        function createElement (type, props, ...children) {
+            return {
+                type,
+                props: {
+                    ...props,
+                    children: children.map(c => typeof c === 'object' ? c : createText(c))
+                }
+            }
+        }
+
+
+        const SelfReact = {
+            createElement,
+            render
+        } 
+    </script>
+
+    <script type="text/babel">
+        /** @jsx SelfReact.createElement */
+        const element = (
+            <div id='app'>
+              <h1>
+                <span>123</span>
+              </h1>
+              <p>456</p>
+            </div>
+        )
+        console.log('创建后的VDOM', element)
+
+        SelfReact.render(element, document.getElementById('root'))
+    </script>
+</body>
+</html>
